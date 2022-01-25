@@ -21,13 +21,13 @@ testFramework:
 ## Specify password for root user
 ##
 ## Default: random 10 character string
-# mysqlRootPassword: testing
+mysqlRootPassword: miyawaki
 
 ## Create a database user
 ##
-# mysqlUser:
+mysqlUser: sakura
 ## Default: random 10 character string
-# mysqlPassword:
+mysqlPassword: kdf82dhsx
 
 ## Allow unauthenticated access, uncomment to enable
 ##
@@ -35,7 +35,7 @@ testFramework:
 
 ## Create a database
 ##
-# mysqlDatabase:
+mysqlDatabase: wechat
 
 ## Specify an imagePullPolicy (Required)
 ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -54,7 +54,7 @@ extraVolumes: |
 
 extraVolumeMounts: |
   # - name: extras
-  #   mountPath: /usr/share/extras
+  #   mountPath: /var/log
   #   readOnly: true
 
 extraInitContainers: |
@@ -110,9 +110,9 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # storageClass: "-"
+  storageClass: "manual"
   accessMode: ReadWriteOnce
-  size: 8Gi
+  size: 10Gi
   annotations: {}
 
 ## Use an alternate scheduler, e.g. "stork".
@@ -138,7 +138,28 @@ resources:
 configurationFilesPath: /etc/mysql/conf.d/
 
 # Custom mysql configuration files used to override default mysql settings
-configurationFiles: {}
+configurationFiles:
+  mysql_custom.cnf: |-
+    [mysqld]
+    innodb_buffer_pool_size=2G
+    max_connections=1000
+    innodb_log_buffer_size=8M
+    sort_buffer_size=16M
+    thread_cache_size=32
+    long_query_time=2
+    bulk_insert_buffer_size=4M
+    innodb_buffer_pool_instances=2
+    query_cache_limit=2M
+    innodb_log_file_size=64M
+    innodb_flush_log_at_trx_commit=2
+    transaction-isolation=READ-COMMITTED
+    wait_timeout=600
+    interactive_timeout=3600
+    innodb_temp_data_file_path=ibtmp1:12M:autoextend:max:5G
+    innodb_file_per_table=1
+    group_concat_max_len=-1
+
+    sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 #  mysql.cnf: |-
 #    [mysqld]
 #    skip-name-resolve
