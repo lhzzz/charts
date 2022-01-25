@@ -152,8 +152,8 @@ redis:
     ## For all available options see http://download.redis.io/redis-stable/redis.conf
     min-replicas-to-write: 1
     min-replicas-max-lag: 5   # Value in seconds
-    maxmemory: "0"       # Max memory to use for each redis instance. Default is unlimited.
-    maxmemory-policy: "volatile-lru"  # Max memory policy to use for each redis instance. Default is volatile-lru.
+    maxmemory: "10649600"       # Max memory to use for each redis instance. Default is unlimited.
+    maxmemory-policy: "allkeys-lru"  # Max memory policy to use for each redis instance. Default is volatile-lru.
     # Determines if scheduled RDB backups are created. Default is false.
     # Please note that local (on-disk) RDBs will still be created when re-syncing with a new slave. The only way to prevent this is to enable diskless replication.
     save: "900 1"
@@ -217,7 +217,7 @@ nodeSelector: {}
 ## This is accomplished by setting their AntiAffinity with requiredDuringSchedulingIgnoredDuringExecution as opposed to preferred.
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#inter-pod-affinity-and-anti-affinity-beta-feature
 ##
-hardAntiAffinity: true
+hardAntiAffinity: false
 
 ## Additional affinities to add to the Redis server pods.
 ##
@@ -337,10 +337,10 @@ persistentVolume:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # storageClass: "-"
+  storageClass: "glusterfs"
   accessModes:
-    - ReadWriteOnce
-  size: 10Gi
+    - ReadWriteMany
+  size: 5Gi
   annotations: {}
   # reclaimPolicy per https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming
   reclaimPolicy: ""
@@ -352,7 +352,7 @@ init:
 # Warning: this might overwrite existing folders on the host system!
 hostPath:
   ## path is evaluated as template so placeholders are replaced
-  # path: "/data/{{ .Release.Name }}"
+  path: "/data/{{ .Release.Name }}"
 
   # if chown is true, an init-container with root permissions is launched to
   # change the owner of the hostPath folder to the user defined in the
