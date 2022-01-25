@@ -329,7 +329,7 @@ auth: false
 authKey: auth
 
 persistentVolume:
-  enabled: true
+  enabled: false
   ## redis-ha data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -337,7 +337,7 @@ persistentVolume:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "glusterfs"
+  # storageClass: "glusterfs"
   accessModes:
     - ReadWriteMany
   size: 5Gi
